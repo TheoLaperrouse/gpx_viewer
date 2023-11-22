@@ -1,7 +1,7 @@
 <template>
     <div>
         <input type="file" id="fileInput" ref="fileInput" accept=".gpx" @change="updateFileName" class="mr-2" />
-        <span class="text-gray-600 w-100">{{ fileName }}</span>
+        <span class="text-gray-600">{{ fileName }}</span>
 
         <button
             @click="loadGPX"
