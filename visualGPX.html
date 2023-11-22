@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <style>
+        body, html {
+            height: 100%;
+            margin: 0;
+        }
+    
+        #map {
+            height: 100vh; 
+            width: 100vw;
+        }
+    </style>
+</head>
+<body>
+    <input type="file" id="fileInput" accept=".gpx" />
+    <button onclick="loadGPX()">Load GPX</button>
+    <div id="map"></div>
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <script src="https://unpkg.com/togeojson@0.16.0/togeojson.js"></script>
+    <script>
+        var map = L.map('map').setView([0, 0], 2);
+    
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '© OpenStreetMap contributors'
+        }).addTo(map);
+    
+        function loadGPX() {
+            var fileInput = document.getElementById('fileInput');
+            var file = fileInput.files[0];
+    
+            if (file) {
+                var reader = new FileReader();
+    
+                reader.onload = function (e) {
+                    var gpxData = e.target.result;
+                    var geojson = toGeoJSON.gpx(new DOMParser().parseFromString(gpxData, 'text/xml'));
+                    L.geoJSON(geojson).addTo(map);
+                    map.fitBounds(L.geoJSON(geojson).getBounds());
+                };
+    
+                reader.readAsText(file);
+            } else {
+                alert('Veuillez sélectionner un fichier GPX.');
+            }
+        }
+    </script>
+</body>
+</html>
